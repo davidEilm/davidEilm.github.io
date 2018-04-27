@@ -1,62 +1,44 @@
-class Coord {
-	constructor(x, y) {
-		this.x = x;
-		this.y = y;
-	}
-}
-var listOfCoords = new Array();
+var w = 40;
+var numOfBlocksInRow = 15;
+
+var start1 = 0;
+var start2 = 0;
 
 function setup() {
-	createCanvas(windowWidth, windowHeight);
-	listOfCoords.push(new Coord(windowWidth / 2, windowHeight / 2));
-	console.log("Press the R-key to reset the canvas!");
+  createCanvas(600, 600, WEBGL);
+  //ortho(-width/1.3, width/1.3, -height/1.3, height/1.3, -600, 600);
 }
 
 function draw() {
+  background(0);
+  stroke(255);
+  fill(0);
 
-	//DYNAMIC BACKGROUND COLER
-	//var color = map(mouseX, 0, windowWidth, 0, 255) //Maps mouseX, which is in the range of 0 to windowWidth, and maps it to 2 to 255.
-	//background(color);
+  translate(0, 0, -500); //To view the simulation in orthographic-view, replace -500 in this line with width/2, and uncomment the ortho(...) line in setup().
+  rotateX(radians(-25));
+  rotateY(PI/4);
 
-	background(55, 55, 55);
+  //Shows the center
+  //fill(255, 0, 0);
+  //ellipse(0, 0, 20, 20);
+  //fill(200);
+  
+  var s1 = start1;
+  for (var x=0; x < numOfBlocksInRow; x++) {
+    var s2 = start2;
+    for (var z=0; z < numOfBlocksInRow; z++) {
+      push();
 
-	
-	//FAST VERSION:
-	for (let i = 1; i < 50; i++) {
-		let temp = new Coord(listOfCoords[listOfCoords.length - 1].x + random(-5, 5), listOfCoords[listOfCoords.length - 1].y + random(-5, 5))
-		listOfCoords.push(temp);
-	}
+      translate(x*w, 0, z*w);
+      translate(-(numOfBlocksInRow*w/2) + w/2, 0, -(numOfBlocksInRow*w/2) + w/2);
+      scale(1, map(sin(s1) + sin(s2), -2, 2, 1, 5), 1);
+      box(w);
 
-	//SLOW VERSION:
-	/*
-	let temp = new Coord(listOfCoords[listOfCoords.length - 1].x + random(-5, 5), listOfCoords[listOfCoords.length - 1].y + random(-5, 5))
-	listOfCoords.push(temp);
-	*/
-
-	for (let i = 1; i < listOfCoords.length; i++) {
-		stroke(255, 94, 246);
-		line(listOfCoords[i - 1].x, listOfCoords[i - 1].y, listOfCoords[i].x, listOfCoords[i].y);
-	}
-
+      pop();
+      s2 += 0.3; //waviness
+    }
+    s1 += 0.3; //waviness
+  }
+  start1 += 0.05; //speed
+  start2 += 0.05; //speed
 }
-
-function mousePressed() { //Is executed exactly once, when mouse gets pressed down
-	//console.log("Mouse has been pressed");
-}
-
-function keyPressed() {
-	if (keyCode === 82) { //R -> Reset
-		console.log(listOfCoords.length);
-		listOfCoords = new Array();
-		listOfCoords.push(new Coord(windowWidth / 2, windowHeight / 2));
-	}
-}
-
-
-/*
-	posX++;
-	rect(posX,mouseY,50,50);
-
-
-
-*/
